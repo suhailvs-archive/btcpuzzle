@@ -119,27 +119,26 @@ def getWif(privkey,compressed=True):
     return b58(wif + sha256(sha256(wif))[:4])
 
 
-# def wifToPrivateKey(s):
-#     import utils
-#     return utils.wif_to_private_key(s)
 
 def display(private_key_hex):
     p = bytes.fromhex(private_key_hex)
-    print('PrivateKey: '+ private_key_hex)
-    print('-'*30)
+    print('PrivateKey: '+ private_key_hex)    
     print('compressed:')
     print("Address: " + getCompressedPublicKey(p))
     print("PrivateKey Wif: " + getWif(p))
-
     print('uncompressed:')
     print("Address: " + getPublicKey(p))
-    print("PrivateKey Wif: " + getWif(p, False))
-    
-    
+    print("PrivateKey Wif: " + getWif(p, False))   
     print()
     
+# def problem_ranges():
+#     hex(dec).split('x')[-1]
+#     int(s, 16)
 
 if __name__ == "__main__":
     # https://privatekeys.pw/puzzles/bitcoin-puzzle-tx
-    for pkey in ['1','3','7','8','15','bebb3940cd0fc1491']:
-        display(pkey.rjust(64, '0'))
+    solutions={1:'1',2:'3',3:'7',4:'8',5:'15',68:'bebb3940cd0fc1491'}    
+    for n,private_key in solutions.items():
+        print(n, int(private_key, 16))
+        print('-'*30)
+        display(private_key.rjust(64, '0'))
