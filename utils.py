@@ -22,8 +22,8 @@ def b58(data):
 
 class Point:
     def __init__(self,
-        x=0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798,
-        y=0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8,
+        x=55066263022277343669578718895168534326250603453777594175500187360389116729240,
+        y=32670510020758816978083085130507043184471273380659243275938904335757337482424,
         p=2**256 - 2**32 - 2**9 - 2**8 - 2**7 - 2**6 - 2**4 - 1):
         self.x = x
         self.y = y
@@ -89,3 +89,14 @@ def getWif(privkey,compressed=True):
     if compressed: wif += b'\x01'
     return b58(wif + sha256(sha256(wif))[:4])
 
+def wifToInt(wif_key):
+    import base58
+    decoded = base58.b58decode_check(wif_key)
+    # Mainnet prefix is 0x80; compressed WIF ends with 0x01
+    if len(decoded) == 34 and decoded[-1] == 0x01:
+        print("Compressed WIF key")
+        private_key = decoded[1:-1]
+    elif len(decoded) == 33:
+        print("Uncompressed WIF key")
+        private_key = decoded[1:]  # Remove prefix only
+    return private_key.hex()
