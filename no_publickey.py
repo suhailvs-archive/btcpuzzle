@@ -1,4 +1,13 @@
-from utils import getPublicKey,getWif,wifToInt
+from utils import getPublicKey,getWif #,wifToInt
+
+def getAddress(pk):
+    # getAddress(219898266213316039825) -> 1G1PszAzdLZWgGNG79pijNrt6BuK5HsVo8
+    from utils import Point, ripemd160, sha256, b58
+    getPublicKey_from_int = lambda pk: Point()*pk
+    pubkey_point = getPublicKey_from_int(pk) # Point(x,y) -> if you know x,y(publickey)
+    hash160 = ripemd160(sha256(pubkey_point.toBytes()))
+    address = b"\x00" + hash160
+    return b58(address + sha256(sha256(address))[:4])
 
 def display(private_key_hex):
     """
@@ -15,7 +24,7 @@ def display(private_key_hex):
     print('compressed:')
     print("Address: " + getPublicKey(p))
     print("PrivateKey Wif: " + getWif(p))
-    print('PrivateKey Int:',wifToInt(getWif(p)))
+    # print('PrivateKey Int:',wifToInt(getWif(p)))
     print('uncompressed:')
     print("Address: " + getPublicKey(p, False))
     print("PrivateKey Wif: " + getWif(p, False))   
@@ -66,12 +75,12 @@ def b():
     ans     = 219_898_266_213_316_039_825 # int('bebb3940cd0fc1491', 16)
     print ((ans/speed)//(3600*24),'days')
 
-def p1():
-    # https://crypto.haluska.sk/
-    # puzzle 1
-    wif_key="5JMTiDVHj3pj8VfaTe6pDtD9byZr6too3PD3AGBJrXF1hVsitc8"
-    pkey = wifToInt(wif_key)
-    display(pkey)
+# def p1():
+#     # https://crypto.haluska.sk/
+#     # puzzle 1
+#     wif_key="5JMTiDVHj3pj8VfaTe6pDtD9byZr6too3PD3AGBJrXF1hVsitc8"
+#     pkey = wifToInt(wif_key)
+#     display(pkey)
 
 def p3():
     # https://crypto.haluska.sk/
@@ -80,4 +89,4 @@ def p3():
     display(pkey)
 
 if __name__ == "__main__":
-    b()
+    print(getAddress(219898266213316039825))
